@@ -13,7 +13,6 @@ def ex_1(descr=False):
         return """ 
 Exercise 1: Plot 2D views of the iris dataset
 ==============================================
-
   Plot a simple scatter plot of 2 features of the iris dataset.
   Note that more elaborate visualization of this dataset is detailed
   in the :ref:`statistics` chapter.
@@ -47,7 +46,6 @@ def ex_2(descr=False):
         return """
 Exercise 2: Introduction to scikit-learn estimator object
 ==========================================================
-
   Demonstrate simple fitting of data using LinearRegression model
 """
     #from sklearn.linear_model import LinearRegression
@@ -76,7 +74,6 @@ def ex_3(descr=False):
         return """
 Exercise 3: Simple Linear Regression exercise
 =============================================
-
   Plot a basic example of fitting using Linear Regresssion
 """
     from sklearn.linear_model import LinearRegression
@@ -104,11 +101,109 @@ Exercise 3: Simple Linear Regression exercise
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.axis('tight')
-    
+
     plot.show()
 
 #--------------------------------------------------------------------------------
+
+def ex_4(descr=False):
+
+    if descr:
+        return """
+Exercise 4: K Nearest-neighbour prediciton on Iris data
+=====================================================
+  Plot the decision boundary of nearest neighbor decision on iris, 
+  first with a single nearest neighbor, and then using 3 nearest 
+  neighbors.
+"""
+
+    from sklearn import neighbors, datasets
+    from matplotlib.colors import ListedColormap
+    iris = datasets.load_iris()
+
+    A, b = iris.data, iris.target
+    knnAb = neighbors.KNeighborsClassifier(n_neighbors=1)
+    knnAb.fit(A,b)
+
+    print("What kind of iris has 3cm x 5cm sepal and 4cm x 2cm petal?")
+    print(iris.target_names[knnAb.predict([[3, 5, 4, 2]])])
+
+    # Create color maps for 3-class classification problem, as with iris
+    cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
+    cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
+
+    X = iris.data[:, :2]  # we only take the first two features. We could
+                          # avoid this ugly slicing by using a two-dim dataset
+    y = iris.target
+    knn = neighbors.KNeighborsClassifier(n_neighbors=1)
+    knn.fit(X, y)
+
+    x_min, x_max = X[:, 0].min() - .1, X[:, 0].max() + .1
+    y_min, y_max = X[:, 1].min() - .1, X[:, 1].max() + .1
+    xx, yy = np.meshgrid(np.linspace(x_min, x_max, 100),
+                            np.linspace(y_min, y_max, 100))
+    Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
+
+    Z = Z.reshape(xx.shape)
+    plot.figure()
+    plot.pcolormesh(xx, yy, Z, cmap=cmap_light)
+
+    # Plot also the training points
+    plot.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold)
+    plot.xlabel('sepal length (cm)')
+    plot.ylabel('sepal width (cm)')
+    plot.axis('tight')
+    plot.show()
+
+    #And now, redo the analysis with 3 neighbors
+    knn = neighbors.KNeighborsClassifier(n_neighbors=3)
+    knn.fit(X, y)
+
+    Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
+
+    # Put the result into a color plot
+    Z = Z.reshape(xx.shape)
+    plot.figure()
+    plot.pcolormesh(xx, yy, Z, cmap=cmap_light)
+
+    # Plot also the training points
+    plot.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold)
+    plot.xlabel('sepal length (cm)')
+    plot.ylabel('sepal width (cm)')
+    plot.axis('tight')
+
+    plot.show()
+
+
 #--------------------------------------------------------------------------------
+
+def ex_5(descr=False):
+
+    if descr:
+        return """
+Exercise 5: Scatter plot with labels
+====================================
+  Show a scatter plot of all countries ranked by overall happiness. The
+  legend has all countries and their colour. Uses the 'seaborn' module.
+"""
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import pandas as pd
+
+    df = pd.read_csv('data\\2019.csv')
+
+    print(df)
+
+    sns.scatterplot(data = df, 
+        x = "GDP per capita", 
+        y = "Score", 
+        hue = "Country or region", 
+        size = "Freedom to make life choices")
+
+    plt.show()
+
+
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
 def is_interactive():
