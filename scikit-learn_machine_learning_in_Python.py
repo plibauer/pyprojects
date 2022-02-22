@@ -190,7 +190,8 @@ Exercise 5: Scatter plot with labels
     import matplotlib.pyplot as plt
     import seaborn as sns
     import pandas as pd
-
+    from mpl_toolkits.mplot3d import Axes3D
+    
     df = pd.read_csv('data\\2019.csv')
 
     print(df)
@@ -200,6 +201,25 @@ Exercise 5: Scatter plot with labels
         y = "Score", 
         hue = "Country or region", 
         size = "Freedom to make life choices")
+
+    plt.show()
+
+
+    # Do a 3D plot
+    sns.set(style = "darkgrid")
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection = '3d')
+
+    x = df['Score']
+    y = df['GDP per capita']
+    z = df['Healthy life expectancy']
+
+    ax.set_xlabel("Happiness")
+    ax.set_ylabel("Per Capita GDP")
+    ax.set_zlabel("Life Expectancy")
+
+    ax.scatter(x, y, z)
 
     plt.show()
 
